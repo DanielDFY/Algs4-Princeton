@@ -1,2 +1,2 @@
-# Percolation-algs4
-Assignment 1 of Coursera Algorithms, Part I
+# Part Ⅰ-algs4
+Assignments of Coursera Algorithms, Part Ⅰ
