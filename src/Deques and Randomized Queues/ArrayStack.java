@@ -4,19 +4,19 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 public class ArrayStack<Item> implements Iterable<Item> {
-    private Item[] s;
+    private Item[] a;
     private int N;
 
     public ArrayStack() {
-        s = (Item[]) new Object[2];
+        a = (Item[]) new Object[2];
         N = 0;
     }
 
     private void resize(int capacity) {
         Item[] copy = (Item[]) new Object[capacity];
         for(int i = 0; i < N; ++i)
-            copy[i] = s[i];
-        s = copy;
+            copy[i] = a[i];
+        a = copy;
     }
 
     public boolean isEmpty() {
@@ -26,27 +26,28 @@ public class ArrayStack<Item> implements Iterable<Item> {
     public int size() { return N; }
 
     public void push(Item item) {
-        if(N == s.length)
+        if(item == null)
+            throw new IllegalArgumentException("Input cannot be null!");
+        if(N == a.length)
             resize(2 * N);
-        s[N++] = item;
+        a[N++] = item;
     }
 
     public Item pop() {
-        if(isEmpty()){
-            throw new NoSuchElementException("Popping an empty stack!");
-        }
-        Item item = s[--N];
-        s[N] = null;
-        if(N > 0 && N == s.length/4)
-            resize(s.length/2);
+        if(isEmpty())
+            throw new NoSuchElementException("Pop an empty stack!");
+        Item item = a[--N];
+        a[N] = null;
+        if(N > 0 && N == a.length/4)
+            resize(a.length/2);
         return item;
     }
 
     public Iterator<Item> iterator() {
-        return new ListIterator();
+        return new ReverseListIterator();
     }
 
-    private class ListIterator implements Iterator<Item> {
+    private class ReverseListIterator implements Iterator<Item> {
         private int i = N;
 
         @Override
@@ -61,7 +62,9 @@ public class ArrayStack<Item> implements Iterable<Item> {
 
         @Override
         public Item next() {
-            return s[--i];
+            if(!hasNext())
+                throw new NoSuchElementException();
+            return a[--i];
         }
     }
 

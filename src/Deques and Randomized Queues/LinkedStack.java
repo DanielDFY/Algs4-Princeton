@@ -24,6 +24,8 @@ public class LinkedStack<Item> implements Iterable<Item>{
     public int size() { return N; }
 
     public void push(Item item) {
+        if(item == null)
+            throw new IllegalArgumentException("Input cannot be null!");
         Node oldFirst = first;
         first = new Node();
         first.item = item;
@@ -32,9 +34,8 @@ public class LinkedStack<Item> implements Iterable<Item>{
     }
 
     public Item pop() {
-        if(isEmpty()){
-            throw new NoSuchElementException("Popping an empty stack!");
-        }
+        if(isEmpty())
+            throw new NoSuchElementException("Pop an empty stack!");
         Item item = first.item;
         first = first.next;
         N--;
@@ -61,6 +62,8 @@ public class LinkedStack<Item> implements Iterable<Item>{
 
         @Override
         public Item next() {
+            if(!hasNext())
+                throw new NoSuchElementException();
             Item item = current.item;
             current = current.next;
             return item;
