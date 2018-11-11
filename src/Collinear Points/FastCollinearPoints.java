@@ -22,20 +22,25 @@ public class FastCollinearPoints {
         for (int i = 0; i < sortedPoints.length - 3; ++i) {
             Arrays.sort(sortedPoints, i, sortedPoints.length);
             Point origin = sortedPoints[i];
+            double[] slopesBefore = new double[i];
+            for (int j = 0; j < i; ++j) {
+                slopesBefore[j] = sortedPoints[j].slopeTo(sortedPoints[i]);
+            }
+            Arrays.sort(slopesBefore);
             Arrays.sort(sortedPoints, i + 1, sortedPoints.length, origin.slopeOrder());
 
             int count = 0;
             double preSlope = Double.NaN;
             Point prePoint = origin;
 
-            for (int j = i + 1; j < sortedPoints.length; ++j) {
-                Point point = sortedPoints[j];
+            for (int k = i + 1; k < sortedPoints.length; ++k) {
+                Point point = sortedPoints[k];
                 double slope = origin.slopeTo(point);
 
                 if (Double.compare(slope, preSlope) == 0) {
                     count++;
                 } else {
-                    if (count >= 3) {
+                    if (count >= 3 && !isSubSegment(slopesBefore, preSlope)) {
                         lineSegments.add(new LineSegment(origin, prePoint));
                     }
                     count = 1;
@@ -45,7 +50,7 @@ public class FastCollinearPoints {
                 prePoint = point;
             }
 
-            if (count >= 3) {
+            if (count >= 3 && !isSubSegment(slopesBefore, preSlope)) {
                 lineSegments.add(new LineSegment(origin, prePoint));
             }
         }
@@ -57,6 +62,24 @@ public class FastCollinearPoints {
                 throw new IllegalArgumentException("Same points exist!");
             }
         }
+    }
+
+    private boolean isSubSegment(double[] slopesBefore, double slope) {     // use binary search
+        int low = 0;
+        int high = slopesBefore.length - 1;
+        while (low <= high)
+        {
+            int mid = low + (high - low) / 2;
+            if (slope < slopesBefore[mid]) {
+                high = mid - 1;
+            }
+            else if (slope > slopesBefore[mid]) {
+                low = mid + 1;
+            }
+
+            else return true;
+        }
+        return false;
     }
 
     public int numberOfSegments() {                 // the number of line segments
