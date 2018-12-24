@@ -4,7 +4,7 @@ import edu.princeton.cs.algs4.RectHV;
 import edu.princeton.cs.algs4.SET;
 
 public class PointSET {
-    private SET<Point2D> pointSet;
+    private final SET<Point2D> pointSet;
 
     public PointSET() {
         pointSet = new SET<>();
@@ -58,7 +58,7 @@ public class PointSET {
             return null;
 
         Point2D nearest = null;
-        double min = Double.MAX_VALUE;
+        double min = Double.POSITIVE_INFINITY;
         for (Point2D p : pointSet) {
             if (point.distanceSquaredTo(p) < min) {
                 nearest = p;
