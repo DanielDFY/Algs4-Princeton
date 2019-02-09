@@ -11,7 +11,7 @@ public class SAP {
     public SAP(Digraph G) {
         if (G == null)
             throw new IllegalArgumentException();
-        digraph = G;
+        digraph = new Digraph(G);
     }
 
     public int length(int v, int w) {
@@ -65,7 +65,7 @@ public class SAP {
     }
 
     private void validate(Iterable<Integer> v) {
-        for (Integer i : v){
+        for (Integer i : v) {
             if (i == null)
                 throw new IllegalArgumentException();
             validate(i);
